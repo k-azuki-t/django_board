@@ -1,0 +1,69 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>Djangoを使ってみよう！</title>
+    <style>
+        .container {
+            background-color: #efefef
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark" aria-label="First navbar example">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'bbs:index' %}">100チャンネル</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01"
+                aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample01">
+                <ul class="navbar-nav me-auto mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'bbs:index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        <span class="nav-link active">
+                            <a>{{ user }}でログイン中</a>
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                {% bootstrap_button button_type="submit" button_class="btn-success" content="ログアウト" size="md" %}
+                            </form>
+                            {% else %}
+                            <form action="{% url 'login' %}" method="post">
+                                {% csrf_token %}
+                                {% bootstrap_button button_type="submit" button_class="btn-success" content="ログイン" size="md" %}
+                            </form>
+                        </span>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown"
+                            aria-expanded="false">Dropdown</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" method="get" action="{% url 'bbs:search' %}">
+                    {{ searchform.query }}
+                    <button class="btn btn-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>
